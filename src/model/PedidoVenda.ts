@@ -1,6 +1,6 @@
 // Classe que representa um pedido/venda
 
-export class Pedido {
+export class PedidoVenda {
     
     //Atributos
     private idPedido: number = 0;

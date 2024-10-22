@@ -107,5 +107,7 @@ export class PedidoVenda {
     public setValorPedido(valorPedido: number): void {
         this.idCarro = valorPedido;
     }
+
+    
 }
 

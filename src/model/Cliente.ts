@@ -1,5 +1,10 @@
-// classe que representa um cliente
+import { query } from "express";
+import { DatabaseModel } from "./DatabaseModel";
 
+const database = new DatabaseModel().pool;
+
+
+// classe que representa um cliente
 export class cliente {
     //atributos
 
@@ -97,4 +102,6 @@ export class cliente {
     public setTelefone(telefone: string): void {
         this.telefone = telefone;
     }
+
+    
 }

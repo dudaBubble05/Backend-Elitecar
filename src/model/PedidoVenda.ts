@@ -194,28 +194,24 @@ export class PedidoVenda {
             return false;
         }
     }
-
- 
-static async removerPedidoVenda(idPedido: number): Promise<boolean> {
-    try {
-        const queryDeletePedido = `DELETE FROM pedido WHERE id_pedido = ${idPedido}`;
-        
-        const respostaBD = await database.query(queryDeletePedido);
-
-        if (respostaBD.rowCount != 0) {
-            console.log(`Pedido de venda removido com sucesso! ID removido: ${idPedido}.`);
-            return true;
+    static async removerPedidoVenda(idPedido: number): Promise<boolean> {
+        try {
+            const queryDeletePedido = `DELETE FROM pedido WHERE id_pedido = ${idPedido}`;
+            
+            const respostaBD = await database.query(queryDeletePedido);
+    
+            if (respostaBD.rowCount != 0) {
+                console.log(`Pedido de venda removido com sucesso! ID removido: ${idPedido}.`);
+                return true;
+            }
+    
+            console.log(`Nenhum pedido de venda encontrado para o ID: ${idPedido}.`);
+            return false;
+    
+        } catch (error) {
+            console.log(`Erro ao remover o pedido de venda. Verifique os logs para mais detalhes.`);
+            console.error(error);
+            return false;
         }
-
-        console.log(`Nenhum pedido de venda encontrado para o ID: ${idPedido}.`);
-        return false;
-
-    } catch (error) {
-        console.log(`Erro ao remover o pedido de venda. Verifique os logs para mais detalhes.`);
-        console.error(error);
-        return false;
     }
-}
-
-
 }

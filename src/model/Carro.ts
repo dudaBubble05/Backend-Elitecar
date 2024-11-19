@@ -223,6 +223,16 @@ export class Carro {
         }
     }
 
+    
+    /**
+     * Remove um carro do banco de dados com base no ID fornecido.
+     *
+     * @param {number} idCarro - O ID do carro a ser removido.
+     * @returns {Promise<boolean>} - Retorna uma promessa que resolve para true se o carro foi removido com sucesso, ou false caso contrário.
+     *
+     * @throws {Error} - Lança um erro se ocorrer um problema durante a remoção do carro.
+     */
+
     static async removerCarro(idCarro: number): Promise<boolean> {
         try{
             const queryDeleteCarro = `DELETE FROM carro WHERE id_carro = ${idCarro}`;
@@ -240,6 +250,42 @@ export class Carro {
         } catch (error){
             console.log(`Erro ao remover carro. Verifique os logs para mais detalhes.`);
             console.log(error);
+            return false;
+        }
+    }
+
+    
+    /**
+     * Atualiza as informações de um carro no banco de dados.
+     *
+     * @param {Carro} carro - O objeto Carro contendo as informações atualizadas.
+     * @returns {Promise<boolean>} - Retorna uma Promise que resolve para true se a atualização foi bem-sucedida, ou false caso contrário.
+     *
+     * @throws {Error} - Lança um erro se ocorrer algum problema durante a execução da query.
+     */
+    static async atualizarCarro(carro: Carro): Promise<boolean> {
+        try{
+            const queryUpdateCarro = `UPDATE carro SET 
+                                        marca = '${carro.getMarca()}',
+                                        modelo = '${carro.getModelo()}',
+                                        ano = ${carro.getAno()},
+                                        cor = '${carro.getCor()}'
+                                        WHERE id_carro = ${carro.getIdCarro()};`;
+            
+            const respostaBD = await database.query(queryUpdateCarro);
+
+            if(respostaBD.rowCount != 0) {
+                console.log(`Carro atualizado com sucesso! ID: ${carro.getIdCarro}`);
+
+                return true;
+            }
+
+            return false;
+
+        } catch (error) {
+            console.log(`Erro ao atualizar o carro. Verifique os logs para mais detalhes.`);
+            console.log(error);
+            
             return false;
         }
     }

@@ -86,6 +86,15 @@ export class CarroController extends Carro {
         }
     }
 
+    /**
+     * Remove um carro do sistema.
+     *
+     * @param {Request} req - O objeto de solicitação HTTP.
+     * @param {Response} res - O objeto de resposta HTTP.
+     * @returns {Promise<Response>} - A resposta HTTP com o status da operação.
+     *
+     * @throws {Error} - Lança um erro se ocorrer algum problema durante a remoção do carro.
+     */
     static async remover(req: Request, res: Response): Promise<Response> {
         try{
             const idCarro = parseInt(req.params.idCarro as string);
@@ -104,5 +113,44 @@ export class CarroController extends Carro {
             return res.status(400).json({ mensagem: "Não foi possível deletar o carro. Entre em contato com o administrador do sistema." });
         }
 
+    }
+
+    /**
+     * Atualiza as informações de um carro existente.
+     * 
+     * @param req - O objeto de solicitação HTTP, contendo o corpo da requisição com os dados do carro a serem atualizados e o ID do carro nos parâmetros da URL.
+     * @param res - O objeto de resposta HTTP.
+     * @returns Uma promessa que resolve para um objeto de resposta HTTP com uma mensagem de sucesso ou erro.
+     * 
+     * @throws Retorna um status 400 com uma mensagem de erro se ocorrer uma exceção durante o processo de atualização.
+     */
+    static async atualizar(req: Request, res: Response): Promise<Response> {
+        try{
+            const carroRecebido: CarroDTO = req.body;
+
+            const idCarroRecebido = parseInt(req.params.idCarro as string);
+
+            const carroAtualizado = new Carro (
+                carroRecebido.marca,
+                carroRecebido.modelo,
+                carroRecebido.ano,
+                carroRecebido.cor
+            );
+
+            carroAtualizado.setIdCarro(idCarroRecebido);
+
+            const respostaModelo = await Carro.atualizarCarro(carroAtualizado);
+
+            if(respostaModelo) {
+                return res.status(200).json({mensagem: "O carro foi atualizado com sucesso!"})
+            } else{
+                return res.status(400).json({ mensagem: "Não foi possível atualizar o carro. Entre em contato com o administrador do sistema." });
+            }
+
+        }catch (error) {
+            console.log(`Error ao atualizar um carro. ${error}`);
+
+            return res.status(400).json({ mensagem: "Não foi possível atualizar o carro. Entre em contato com o administrador do sistema." });
+        }
     }
 }

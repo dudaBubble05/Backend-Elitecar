@@ -20,6 +20,8 @@ router.get("/lista/carros", CarroController.todos);
 router.post("/novo/carro", CarroController.novo);
 // Rota para deletar um carro
 router.delete("/delete/carro/:idCarro", CarroController.remover);
+//Rota para atualizar o carro
+router.put("/atualizar/carro/:idCarro", CarroController.atualizar);
 
 
 /* 
@@ -31,6 +33,9 @@ router.get("/lista/clientes", ClienteController.todos);
 router.post("/novo/cliente", ClienteController.novo);
 // Rota para deletar um cliente
 router.delete("/delete/cliente/:idCliente", ClienteController.remover);
+//Rota para atualizar o cliente
+router.put("/atualizar/cliente/:idCliente", ClienteController.atualizar);
+
 
 /* 
 * ROTAS PARA PEDIDOS
@@ -41,6 +46,8 @@ router.get("/lista/pedidos", PedidoVendaController.todos);
 router.post("/novo/pedido", PedidoVendaController.novo);
 // Rota para deletar pedido
 router.delete("/delete/pedido/:idPedido", PedidoVendaController.remover);
+//Rota para atualizar o pedido
+router.put("/atualizar/pedido/:idPedido", PedidoVendaController.atualizar);
 
 
 // exportando as rotas

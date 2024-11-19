@@ -103,6 +103,16 @@ export class Cliente {
         this.telefone = telefone;
     }
 
+    
+    /**
+     * Busca e retorna uma lista de clientes do banco de dados.
+     * @returns Um array de objetos do tipo `Cliente` em caso de sucesso ou `null` se ocorrer um erro durante a consulta.
+     * 
+     * - A função realiza uma consulta SQL para obter todos os registros da tabela "cliente".
+     * - Os dados retornados são utilizados para instanciar objetos da classe `Cliente`.
+     * - Cada cliente instanciado é adicionado a uma lista que será retornada ao final da execução.
+     * - Se houver uma falha na consulta ao banco, a função captura o erro, exibe uma mensagem no console e retorna `null`.
+     */
     static async listagemClientes(): Promise<Array<Cliente> | null> {
         const listaDeClientes: Array<Cliente> = [];
 
@@ -166,6 +176,14 @@ export class Cliente {
         }
     }
 
+    /**
+     * Remove um cliente do banco de dados com base no ID fornecido.
+     *
+     * @param idCliente - O ID do cliente a ser removido.
+     * @returns Uma Promise que resolve para `true` se o cliente foi removido com sucesso, ou `false` caso contrário.
+     *
+     * @throws Lança um erro se ocorrer um problema durante a execução da consulta.
+     */
     static async removerCliente(idCliente: number): Promise<boolean> {
         try {
             const queryDeleteCliente = `DELETE FROM cliente WHERE id_cliente = ${idCliente}`;
@@ -182,6 +200,32 @@ export class Cliente {
         } catch (error) {
             console.log(`Erro ao remover cliente. Verifique os logs para mais detalhes.`);
             console.log(error);
+            return false;
+        }
+    }
+
+    static async atualizarCliente(cliente: Cliente): Promise<boolean> {
+        try{
+            const queryUpdateCliente = `UPDATE cliente SET 
+                                        nome = '${cliente.getNome()}',
+                                        cpf = '${cliente.getCpf()}',
+                                        telefone = '${cliente.getTelefone()}'
+                                        WHERE id_cliente = ${cliente.getIdCliente()};`;
+            
+            const respostaBD = await database.query(queryUpdateCliente);
+
+            if(respostaBD.rowCount != 0) {
+                console.log(`Cliente atualizado com sucesso! ID: ${cliente.getIdCliente}`);
+
+                return true;
+            }
+
+            return false;
+
+        } catch (error) {
+            console.log(`Erro ao atualizar o cliente. Verifique os logs para mais detalhes.`);
+            console.log(error);
+            
             return false;
         }
     }

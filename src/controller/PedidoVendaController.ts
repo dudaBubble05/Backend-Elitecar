@@ -71,22 +71,68 @@ export class PedidoVendaController extends PedidoVenda {
         }
     }
 
+    /**
+     * Remove um pedido de venda com base no ID fornecido na requisição.
+     *
+     * @param req - Objeto de requisição do Express contendo o ID do pedido nos parâmetros.
+     * @param res - Objeto de resposta do Express para enviar a resposta ao cliente.
+     * @returns Uma Promise que resolve para um objeto de resposta do Express.
+     *
+     * @throws Retorna uma resposta com status 400 e uma mensagem de erro se ocorrer algum problema durante a remoção do pedido.
+     */
     static async remover(req: Request, res: Response): Promise<Response> {
         try {
             const idPedido = parseInt(req.params.idPedido as string);
-    
-            const respostaModelo = await PedidoVenda.removerPedidoVenda(idPedido);
-    
-            if (respostaModelo) {
-                return res.status(200).json({ mensagem: "O pedido foi removido com sucesso!" });
+
+            const repostaClasse = await PedidoVenda.removerPedido(idPedido);
+
+            if(repostaClasse) {
+                return res.status(200).json({ mensagem: "Pedido de venda removido com sucesso!"});
             } else {
-                return res.status(400).json({ mensagem: "Não foi possível deletar o pedido. Entre em contato com o administrador do sistema." });
+                return res.status(400).json({ mensagem: "Não foi possível remover o pedido. Entre em contato com o administrador do sistema." });
             }
         } catch (error) {
-            console.log(`Erro ao remover um pedido. ${error}`);
-            return res.status(500).json({ mensagem: "Erro interno ao tentar deletar o pedido. Entre em contato com o administrador do sistema." });
+            console.log(`Erro ao remover o pedido. ${error}`);
+            return res.status(400).json({ mensagem: "Não foi possível remover o pedido. Entre em contato com o administrador do sistema." });
         }
     }
-    
 
+    /**
+     * Atualiza as informações de um pedido existente.
+     * 
+     * @param req - O objeto de solicitação HTTP, contendo o corpo da requisição com os dados do pedido a serem atualizados e o ID do pedido nos parâmetros da URL.
+     * @param res - O objeto de resposta HTTP.
+     * @returns Uma promessa que resolve para um objeto de resposta HTTP com uma mensagem de sucesso ou erro.
+     * 
+     * @throws Retorna um status 400 com uma mensagem de erro se ocorrer uma exceção durante o processo de atualização.
+     */
+    static async atualizar(req: Request, res: Response): Promise<Response> {
+        try{
+            const pedidoRecebido: PedidoVendaDTO = req.body;
+
+            const idPedidoRecebido = parseInt(req.params.idPedido as string);
+
+            const pedidoAtualizado = new PedidoVenda (
+                pedidoRecebido.idCarro,
+                pedidoRecebido.idCliente,
+                pedidoRecebido.dataPedido,
+                pedidoRecebido.valorPedido
+            );
+
+            pedidoAtualizado.setIdPedido(idPedidoRecebido);
+
+            const respostaModelo = await PedidoVenda.atualizarPedidoVenda(pedidoAtualizado);
+
+            if(respostaModelo) {
+                return res.status(200).json({mensagem: "O pedido foi atualizado com sucesso!"})
+            } else{
+                return res.status(400).json({ mensagem: "Não foi possível atualizar o pedido. Entre em contato com o administrador do sistema." });
+            }
+
+        }catch (error) {
+            console.log(`Error ao atualizar um pedido. ${error}`);
+
+            return res.status(400).json({ mensagem: "Não foi possível atualizar o pedido. Entre em contato com o administrador do sistema." });
+        }
+    }
 }

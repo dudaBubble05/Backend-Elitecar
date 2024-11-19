@@ -194,23 +194,65 @@ export class PedidoVenda {
             return false;
         }
     }
-    static async removerPedidoVenda(idPedido: number): Promise<boolean> {
+
+    /**
+     * Remove um pedido de venda do banco de dados com base no ID fornecido.
+     *
+     * @param idPedido - O ID do pedido de venda a ser removido.
+     * @returns Uma promessa que resolve para `true` se o pedido foi removido com sucesso, ou `false` caso contrário.
+     *
+     * @throws Lança um erro se ocorrer um problema durante a execução da consulta no banco de dados.
+     */
+    static async removerPedido(idPedido: number): Promise<boolean> {
         try {
-            const queryDeletePedido = `DELETE FROM pedido WHERE id_pedido = ${idPedido}`;
-            
-            const respostaBD = await database.query(queryDeletePedido);
-    
-            if (respostaBD.rowCount != 0) {
-                console.log(`Pedido de venda removido com sucesso! ID removido: ${idPedido}.`);
+            const queryDeletePedidoVenda = `DELETE FROM pedido_venda WHERE id_pedido=${idPedido};`;
+
+            const respostaBD = await database.query(queryDeletePedidoVenda);
+
+            if(respostaBD.rowCount != 0) {
+                console.log(`Pedido de venda removido com sucesso! ID: ${idPedido}.`);
                 return true;
             }
-    
-            console.log(`Nenhum pedido de venda encontrado para o ID: ${idPedido}.`);
+
             return false;
-    
         } catch (error) {
-            console.log(`Erro ao remover o pedido de venda. Verifique os logs para mais detalhes.`);
-            console.error(error);
+            console.log('Erro ao remover o pedido. Consulte os logs para mais detalhes.');
+            console.log(error);
+            return false;
+        }
+    }
+
+    /**
+     * Atualiza as informações de um pedido no banco de dados.
+     *
+     * @param {PedidoVenda} pedido - O objeto pedido contendo as informações atualizadas.
+     * @returns {Promise<boolean>} - Retorna uma Promise que resolve para true se a atualização foi bem-sucedida, ou false caso contrário.
+     *
+     * @throws {Error} - Lança um erro se ocorrer algum problema durante a execução da query.
+     */
+    static async atualizarPedidoVenda(pedido: PedidoVenda): Promise<boolean> {
+        try{
+            const queryUpdatePedido = `UPDATE pedido_venda SET 
+                                        id_carro = ${pedido.getIdCarro()},
+                                        id_cliente = ${pedido.getIdCliente()},
+                                        data_pedido = '${pedido.getDataPedido()}',
+                                        valor_pedido = ${pedido.getValorPedido()}
+                                        WHERE id_pedido = ${pedido.getIdPedido()};`;
+            
+            const respostaBD = await database.query(queryUpdatePedido);
+
+            if(respostaBD.rowCount != 0) {
+                console.log(`Pedido atualizado com sucesso! ID: ${pedido.getIdPedido}`);
+
+                return true;
+            }
+
+            return false;
+
+        } catch (error) {
+            console.log(`Erro ao atualizar o pedido. Verifique os logs para mais detalhes.`);
+            console.log(error);
+            
             return false;
         }
     }

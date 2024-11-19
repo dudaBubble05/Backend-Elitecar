@@ -165,4 +165,24 @@ export class Cliente {
             return false;
         }
     }
+
+    static async removerCliente(idCliente: number): Promise<boolean> {
+        try {
+            const queryDeleteCliente = `DELETE FROM cliente WHERE id_cliente = ${idCliente}`;
+        
+            const respostaBD = await database.query(queryDeleteCliente);
+
+            if(respostaBD.rowCount != 0) {
+                console.log(`Cliente removido com sucesso. ID removido: ${idCliente}`);
+                return true;
+            }
+
+            return false;
+
+        } catch (error) {
+            console.log(`Erro ao remover cliente. Verifique os logs para mais detalhes.`);
+            console.log(error);
+            return false;
+        }
+    }
 }

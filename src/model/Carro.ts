@@ -225,7 +225,7 @@ export class Carro {
 
     static async removerCarro(idCarro: number): Promise<boolean> {
         try{
-            const queryDeleteCarro = `DELETE FROM carro  WHERE id_carro = ${idCarro}`;
+            const queryDeleteCarro = `DELETE FROM carro WHERE id_carro = ${idCarro}`;
             
             const respostaBD = await database.query(queryDeleteCarro);
 
